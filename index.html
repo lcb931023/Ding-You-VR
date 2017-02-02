@@ -6,16 +6,41 @@
     <meta name="description" content="Hello, World! - A-Frame">
     <script src="./scripts/aframe.js"></script>
     <script src="./scripts/aframe-particle-system-component.js"></script>
+    <script src="./scripts/aframe-bmfont-text-component.js"></script>
   </head>
   <body>
-    <a-scene>
-      <a-box position="-1 0.5 -3" rotation="0 45 0" color="#9D261E"></a-box>
-      <a-sphere position="0 1.25 -5" radius="1.25" color="#832019"></a-sphere>
-      <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#AA2920"></a-cylinder>
-      <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#E9392D"></a-plane>
-      <a-sky color="#000000"></a-sky>
-      <a-entity position="0 20 0" particle-system="preset: rain; particleCount: 100; velocityValue: 0 40 0; maxAge: 3; texture: ./images/red-pocket.png; size: 10; opacity: 10;"></a-entity>
 
+    <script type="text/javascript">
+      AFRAME.registerComponent('bmfont-text-change', {
+        schema: {
+          delay: { type: 'int', default: 0 },
+          text: { type: 'string' }
+        },
+        init: function () {
+          setTimeout(function(){
+            this.el.setAttribute('bmfont-text', {text: this.data.text});
+          }.bind(this), this.data.delay);
+        }
+      });
+    </script>
+
+    <a-scene fog="type: exponential; color: #000; density: 0.012;">
+      <a-asset-item id="rooster-obj" src="./assets/GARDEN_ROOSTER.obj"></a-asset-item>
+      <a-asset-item id="rooster-mtl" src="./assets/GARDEN_ROOSTER.obj.mtl"></a-asset-item>
+
+      <a-plane position="0 0 -4" rotation="-90 0 0" width="400" height="400" color="#E9392D"></a-plane>
+      <a-sky color="#000000"></a-sky>
+      <a-entity position="0 40 0" visible="false"  particle-system="preset: rain; particleCount: 100; velocityValue: 0 40 0; maxAge: 3; texture: ./images/red-pocket.png; size: 10; opacity: 10;">
+        <a-animation attribute="visible" begin="20000" to="true"></a-animation>
+      </a-entity>
+
+      <a-entity obj-model="obj: #rooster-obj; mtl: #rooster-mtl;" material="color: #FF431A" scale="1 1 1" rotation="-90 -120 0" position="0 -80 70">
+        <a-animation attribute="position" dur="20000" fill="forwards" to="0 0 70"></a-animation>
+      </a-entity>
+
+      <a-entity bmfont-text="text: BEHIND YOU.; color: #FFF" bmfont-text-change="text: HAPPY YEAR OF THE ROOSTER!; delay: 20000" position="-0.8 1.6 -1.5"></a-entity>
+
+      <a-entity light="angle:49.12;decay:0;distance:100;intensity:2.34;penumbra:1;target:null" position="0 50 -80"></a-entity>
     </a-scene>
   </body>
 </html>
